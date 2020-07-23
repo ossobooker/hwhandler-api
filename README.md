@@ -9,4 +9,4 @@ Python 3 required. :wink:
 
 ## Run
 
-`uvicorn app.main:app --reload`
+`uvicorn hwhandler_api.main:hwhandler_api --reload`
