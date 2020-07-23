@@ -10,3 +10,7 @@ Python 3 required. :wink:
 ## Run
 
 `uvicorn hwhandler_api.main:hwhandler_api --reload`
+
+## API
+
+http://localhost:8000/docs
