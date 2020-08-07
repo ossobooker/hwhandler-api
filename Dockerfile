@@ -1,5 +1,10 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
+FROM 3.7-alpine
 
-RUN pip install -r requirements.txt
+WORKDIR /usr/src/app
 
-COPY ./hwhandler_api /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD [ "app.sh" ]
