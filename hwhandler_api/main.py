@@ -65,10 +65,15 @@ async def fsm_state():
     )
 
 @hwhandler_api.put("/fsm", response_model=FSM)
-# @hwhandler_api.put("/fsm")
 async def fsm_transition(transition: Transition):
     getattr(hw_system.fsm, transition.transition)()
     return FSM(
         state=hw_system.fsm.state,
         available_transitions=hw_system.fsm.available_transitions()
     )
+
+# @hwhandler_api.put("/febcontrol/configure")
+# async def febcontrol_configure(feb_part: FecPart):
+#     # executing command
+#     # FIXME: Implement FEBControl Command.
+#     return { "OK" }
