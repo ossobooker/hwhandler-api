@@ -77,3 +77,4 @@ async def fsm_transition(transition: Transition):
 #     # executing command
 #     # FIXME: Implement FEBControl Command.
 #     return { "OK" }
+
