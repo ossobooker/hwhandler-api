@@ -1,0 +1,29 @@
+# Finite State Machine
+fsm:
+    states: 
+    - halted
+    - engaged
+    - synchronized
+    - configured
+    - running
+    - error
+
+    initial_state: halted
+
+    transitions:
+    - {trigger: engage, source: halted, dest: engaged, before: do_dummy}
+    - {trigger: synchronize_links, source: engaged, dest: synchronized}
+    - {trigger: configure, source: synchronized, dest: configured}
+    - {trigger: start, source: configured, dest: running}
+    - {trigger: stop, source: running, dest: configured}
+    - {trigger: reset, source: '*', dest: halted}
+    - {trigger: fail, source: '*', dest: error}
+
+    transitions_commands:
+    - do_dummy
+    # - do_engage
+    # - do_synchronize_links
+    # - do_configure
+    # - do_start
+    # - do_stop
+    # - do_reset

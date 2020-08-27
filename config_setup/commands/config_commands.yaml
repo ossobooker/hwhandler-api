@@ -1,0 +1,4 @@
+# List of commands
+commands:
+    helloworld: helloworld.py
+    dummy: dummy.py
