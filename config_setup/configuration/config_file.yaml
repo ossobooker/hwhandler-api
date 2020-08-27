@@ -24,7 +24,7 @@ system:
       slot: 1
       type: fan-out
   # data and clock managers (AMC13, DTH, ...)
-  # should have the same IDs as in the connection_file
+  # should have the same id as in the connection_file
   data-clock-manager:
     - id: dcm-1
       shelf: shelf-1
