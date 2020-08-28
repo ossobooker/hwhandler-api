@@ -22,7 +22,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-# API setup
+# API setupss
 hwhandler_api = FastAPI()
 
 # system check status middleware
