@@ -2,8 +2,8 @@
 system:
   name: Dummy Setup
   connection_file: configuration/connection_file.xml
-  # shelfs were the the boards are inserted
-  shelfs:
+  # shelves were the the boards are inserted
+  shelves:
     - id: shelf-1
       location: SGxFy
     - id: shelf-2

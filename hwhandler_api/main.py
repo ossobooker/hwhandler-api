@@ -1,18 +1,19 @@
 import sys
 import logging
 
-# from functools import wraps
-
-
-from typing import Optional
 from fastapi import FastAPI
 from fastapi import HTTPException
+from fastapi import Request
+from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
-from typing import List, Optional
+
 from starlette.responses import RedirectResponse
 
 from hwhandler_api.core import BaseSystem
+from hwhandler_api.core import hw_system
+
+from hwhandler_api.routers import shelves, boards, system, fsm, feb_control
+
 
 # logging setup
 logging.basicConfig(
@@ -21,40 +22,24 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-# default config file setup
-# FIXME: we a need a automatized way to pass the config file
-config_file = "config_setup/configuration/config_file.yaml"
-
-# System setup
-hw_system = BaseSystem(config_file=config_file)
-
 # API setup
 hwhandler_api = FastAPI()
 
-### Pydantic Models
-# FSM Model
-class FSM(BaseModel):
-    state: str = ""
-    available_transitions: Optional[List[str]] = []
+# system check status middleware
+@hwhandler_api.middleware("http")
+async def check_system_status(request: Request, call_next):
+    """Raise an HTTPException (500) if the system is not properly set."""
 
-
-# Transition Model
-class Transition(BaseModel):
-    transition: str = ""
+    if hw_system.system_status.status_code != 0:
+        return JSONResponse(
+            content=f"{hw_system.system_status.error_message} (Internal status code: {hw_system.system_status.status_code})",
+            status_code=500,
+        )
+    else:
+        return await call_next(request)
 
 
 ### API routes
-
-# block the system when it is ERROR
-def check_system_status():
-    """Block the system when it is ERROR. It should be applied whenever a new route is defined. """
-    if hw_system.system_status.status_code != 0:
-        raise HTTPException(
-            status_code=500,
-            detail=f"{hw_system.system_status.error_message} (Internal status code: {hw_system.system_status.status_code})",
-        )
-
-
 # API status
 @hwhandler_api.get("/")
 async def root():
@@ -63,46 +48,17 @@ async def root():
     return response
 
 
-@hwhandler_api.get("/status")
-# @check_system_status
-async def system_status():
-    check_system_status()
-    return {
-        "status": hw_system.system_status.status_code,
-        "error_message": hw_system.system_status.error_message,
-    }
+# system routes
+hwhandler_api.include_router(system.router)
 
+# boards routes
+hwhandler_api.include_router(boards.router)
 
-# System Info
-@hwhandler_api.get("/system")
-async def system_info():
-    check_system_status()
-    return hw_system.config["system"]
+# shelves routes
+hwhandler_api.include_router(shelves.router)
 
+# fsm routes
+hwhandler_api.include_router(fsm.router)
 
-# FSM Stuff
-@hwhandler_api.get("/fsm", response_model=FSM)
-async def fsm_state():
-    check_system_status()
-    return FSM(
-        state=hw_system.fsm.state,
-        available_transitions=hw_system.fsm.available_transitions(),
-    )
-
-
-@hwhandler_api.put("/fsm", response_model=FSM)
-async def fsm_transition(transition: Transition):
-    check_system_status()
-    getattr(hw_system.fsm, transition.transition)()
-    return FSM(
-        state=hw_system.fsm.state,
-        available_transitions=hw_system.fsm.available_transitions(),
-    )
-
-
-# FEB Control Stuff
-# @hwhandler_api.put("/febcontrol/configure")
-# async def febcontrol_configure(feb_part: FecPart):
-#     # executing command
-#     # FIXME: Implement FEBControl Command.
-#     return { "OK" }
+# fsm routes
+hwhandler_api.include_router(feb_control.router)

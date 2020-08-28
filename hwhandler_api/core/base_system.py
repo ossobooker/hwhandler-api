@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 from .system_fsm import FSM
 
+
 class BaseSystem:
     """Base for a system configuration."""
 
@@ -23,7 +24,6 @@ class BaseSystem:
         # setup fsm
         if self.system_status.status_code == 0:
             self.fsm_config = self.config["fsm"]
-            # print(self.fsm_config)
             self.fsm = FSM(
                 name="system_fsm",
                 states=self.fsm_config["states"],
@@ -65,3 +65,11 @@ class BaseSystem:
             self.set_system_status(
                 status_code=1, error_message="Configuration file not found."
             )
+
+
+# default config file setup
+# FIXME: we a need a automatized way to pass the config file
+config_file = "config_setup/configuration/config_file.yaml"
+
+# System setup
+hw_system = BaseSystem(config_file=config_file)

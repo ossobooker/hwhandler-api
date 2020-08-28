@@ -1,4 +1,4 @@
-class BaseCommand():
+class BaseCommand:
     def __init__(self):
         self.pre_command()
         self.exec_command()
@@ -12,7 +12,7 @@ class BaseCommand():
 
     def post_command(self):
         return 0
-      
-if __name__ == '__main__':
-    cmd = BaseCommand()
 
+
+if __name__ == "__main__":
+    cmd = BaseCommand()
