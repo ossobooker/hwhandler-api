@@ -4,6 +4,9 @@ import os
 from types import SimpleNamespace
 
 from .system_fsm import FSM
+from .validate_system import validate_system, SystemConfigError
+
+
 
 
 class BaseSystem:
@@ -60,11 +63,24 @@ class BaseSystem:
             with open("config_setup/fsm/config_fsm.yaml", "r") as f:
                 self.config.update(yaml.safe_load(f))
 
-        except:
-            logging.error(f"Configuration file not found.")
+        except FileNotFoundError as error:
+            logging.error(f"Configuration file not found. EXCEPTION: {error}")
             self.set_system_status(
-                status_code=1, error_message="Configuration file not found."
+                status_code=1,
+                error_message=f"Configuration file not found. EXCEPTION: {error}",
             )
+
+        else:
+            try:
+                validate_system(self.config)
+            except SystemConfigError as error:
+                logging.error(
+                    f"It was not possible to validate the passed configuration. EXCEPTION: {error}"
+                )
+                self.set_system_status(
+                    status_code=1,
+                    error_message=f"It was not possible to validate the passed configuration. EXCEPTION: {error}",
+                )
 
 
 # default config file setup

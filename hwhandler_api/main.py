@@ -12,7 +12,14 @@ from starlette.responses import RedirectResponse
 from hwhandler_api.core import BaseSystem
 from hwhandler_api.core import hw_system
 
-from hwhandler_api.routers import shelves, boards, system, fsm, feb_control
+from hwhandler_api.routers import (
+    shelves,
+    boards,
+    system,
+    data_clock_managers,
+    fsm,
+    feb_control,
+)
 
 
 # logging setup
@@ -57,8 +64,11 @@ hwhandler_api.include_router(boards.router)
 # shelves routes
 hwhandler_api.include_router(shelves.router)
 
+# shelves routes
+hwhandler_api.include_router(data_clock_managers.router)
+
 # fsm routes
 hwhandler_api.include_router(fsm.router)
 
-# fsm routes
+# feb-control routes
 hwhandler_api.include_router(feb_control.router)

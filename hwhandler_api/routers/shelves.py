@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 
 from hwhandler_api.core import hw_system
@@ -21,7 +23,6 @@ async def shelf_info(shelf_id: str):
             if shelf["id"] == shelf_id
         )
     except:
-        raise HTTPException(
-            status_code=500,
-            detail=f"It was not possible to find the requested shelf ({shelf_id}).",
-        )
+        message = f"It was not possible to find the requested shelf ({shelf_id})."
+        logging.error(message)
+        raise HTTPException(status_code=500, detail=message,)

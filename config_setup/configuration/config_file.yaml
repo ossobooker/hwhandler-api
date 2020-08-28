@@ -12,20 +12,20 @@ system:
   # should have the same IDs as in the connection_file
   boards:
     - id: board-A
-      shelf: shelf1
+      shelf: shelf-1
       slot: 1
       type: concentrator
     - id: board-B
-      shelf: shelf1
+      shelf: shelf-1
       slot: 2
       type: fan-out
     - id: board-C
-      shelf: shelf2
+      shelf: shelf-2
       slot: 1
       type: fan-out
   # data and clock managers (AMC13, DTH, ...)
   # should have the same id as in the connection_file
-  data-clock-manager:
+  data-clock-managers:
     - id: dcm-1
       shelf: shelf-1
       slot: 13
