@@ -30,11 +30,11 @@ class FSM:
         )
 
         # set transition commands
-        # self.do_dummy = config_setup.fsm.do_dummy.do_dummy
+        # self.do_dummy = system_setup.fsm.do_dummy.do_dummy
 
         # if self.state != "no_state":
         #     for tc in transitions_commands:
-        #         command_module = importlib.import_module(f"config_setup.fsm.{tc}")
+        #         command_module = importlib.import_module(f"system_setup.fsm.{tc}")
         #         command_obj = getattr(command_module, tc)
         #         setattr(self, tc, command_obj)
         #     # self.do_dummy().exec_command()

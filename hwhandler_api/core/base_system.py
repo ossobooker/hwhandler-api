@@ -46,21 +46,22 @@ class BaseSystem:
             f"Configuring Hardware Handler. Configuration file: {self.config_file}"
         )
 
+        # try to load configuration from yaml file
         try:
             # load system config
             with open(self.config_file, "r") as f:
                 self.config = yaml.safe_load(f)
 
             # load commands config
-            with open("config_setup/commands/config_commands.yaml", "r") as f:
+            with open("system_setup/commands/config_commands.yaml", "r") as f:
                 self.config.update(yaml.safe_load(f))
 
             # load monitorables config
-            with open("config_setup/monitorables/config_monitorables.yaml", "r") as f:
+            with open("system_setup/monitorables/config_monitorables.yaml", "r") as f:
                 self.config.update(yaml.safe_load(f))
 
             # load fsm config
-            with open("config_setup/fsm/config_fsm.yaml", "r") as f:
+            with open("system_setup/fsm/config_fsm.yaml", "r") as f:
                 self.config.update(yaml.safe_load(f))
 
         except FileNotFoundError as error:
@@ -69,23 +70,22 @@ class BaseSystem:
                 status_code=1,
                 error_message=f"Configuration file not found. EXCEPTION: {error}",
             )
-
         else:
+            # if config load is successfull, validate the system
             try:
                 validate_system(self.config)
             except SystemConfigError as error:
-                logging.error(
-                    f"It was not possible to validate the passed configuration. EXCEPTION: {error}"
-                )
+                message = f"It was not possible to validate the passed configuration. EXCEPTION: {error}"
+                logging.error(message)
                 self.set_system_status(
                     status_code=1,
-                    error_message=f"It was not possible to validate the passed configuration. EXCEPTION: {error}",
+                    error_message=message,
                 )
 
 
 # default config file setup
 # FIXME: we a need a automatized way to pass the config file
-config_file = "config_setup/configuration/config_file.yaml"
+config_file = "system_setup/configuration/config_file.yaml"
 
 # System setup
 hw_system = BaseSystem(config_file=config_file)
